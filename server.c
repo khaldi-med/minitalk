@@ -1,11 +1,26 @@
+#include <signal.h>
 #include <stdio.h>
 #include <unistd.h>
 
+void	sig_handler(int signum)
+{
+	if (signum == SIGUSR1)
+		write(1, "catch SIGUSR1!", 14);
+	else if (signum == SIGUSR2)
+		write(1, "catch SIGUSR2!", 14);
+}
+
 int	main(void)
 {
-	int	pid;
+	struct sigaction	sig;
 
-	pid = getpid();
-	printf("The process ID is %d\n", pid);
+	printf("the pid poc is %d\n: ", getpid());
+	sig.sa_handler = sig_handler;
+	sigemptyset(&sig.sa_mask);
+	sig.sa_flags = 0;
+	sigaction(SIGUSR1, &sig, NULL);
+	sigaction(SIGUSR2, &sig, NULL);
+	while (1)
+		pause();
 	return (0);
 }
