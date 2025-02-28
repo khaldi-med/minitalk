@@ -5,9 +5,9 @@
 void	sig_handler(int signum)
 {
 	if (signum == SIGUSR1)
-		write(1, "catch SIGUSR1!", 14);
+		write(1, "catch SIGUSR1!\n", 15);
 	else if (signum == SIGUSR2)
-		write(1, "catch SIGUSR2!", 14);
+		write(1, "catch SIGUSR2!\n", 15);
 }
 
 int	main(void)
