@@ -4,10 +4,14 @@
 
 void	sig_handler(int signum)
 {
+	char	bit_catched;
+
+	bit_catched = '0';
 	if (signum == SIGUSR1)
-		write(1, "catch SIGUSR1!\n", 15);
+		bit_catched += '1';
 	else if (signum == SIGUSR2)
-		write(1, "catch SIGUSR2!\n", 15);
+		bit_catched += '0';
+	printf("%s", &bit_catched);
 }
 
 int	main(void)
