@@ -1,7 +1,30 @@
 #include <signal.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include <unistd.h>
+
+int	ft_atoi(const char *str)
+{
+	unsigned	n;
+	int			sing;
+	char		*s;
+
+	s = (char *)str;
+	n = 0;
+	sing = 1;
+	while ((*s >= 9 && *s <= 13) || *s == ' ')
+		s++;
+	if (*s == '+' || *s == '-')
+	{
+		if (*s == '-')
+			sing *= -1;
+		s++;
+	}
+	while (*s >= '0' && *s <= '9')
+	{
+		n = (n * 10) + (*s - '0');
+		s++;
+	}
+	return (sing * n);
+}
 
 void	ft_send_bit(int pid, char c)
 {
@@ -27,12 +50,15 @@ int	main(int ac, char **av)
 
 	if (ac != 3)
 	{
-		printf("The argemments not valide!");
+		write(1, "The argemments not valide!", 25);
 		return (1);
 	}
 	str = av[2];
-	pid = atoi(av[1]);
+	pid = ft_atoi(av[1]);
 	while (*str)
+	{
 		ft_send_bit(pid, *str);
+		str++;
+	}
 	return (0);
 }
