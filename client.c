@@ -64,5 +64,6 @@ int	main(int ac, char **av)
 	}
 	ft_send_bit(serv_pid, '\0');
 	byte_send++;
+	write(1, "[byte_send] has been send!", 25);
 	return (0);
 }
