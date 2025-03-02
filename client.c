@@ -1,6 +1,8 @@
 #include <signal.h>
 #include <unistd.h>
 
+int		byte_send;
+
 int	ft_atoi(const char *str)
 {
 	unsigned	n;
@@ -26,26 +28,25 @@ int	ft_atoi(const char *str)
 	return (sing * n);
 }
 
-void	ft_send_bit(int pid, char c)
+void	ft_send_bit(int serv_pid, char c)
 {
 	int	i;
-	int	res;
 
 	i = 0;
 	while (i < 8)
 	{
-		res = (c >> i) & 1;
-		if (res)
-			kill(pid, SIGUSR1);
+		if ((c >> i) & 1)
+			kill(serv_pid, SIGUSR1);
 		else
-			kill(pid, SIGUSR2);
+			kill(serv_pid, SIGUSR2);
+		usleep(100);
 		i++;
 	}
 }
 
 int	main(int ac, char **av)
 {
-	int		pid;
+	int		serv_pid;
 	char	*str;
 
 	if (ac != 3)
@@ -54,11 +55,14 @@ int	main(int ac, char **av)
 		return (1);
 	}
 	str = av[2];
-	pid = ft_atoi(av[1]);
+	serv_pid = ft_atoi(av[1]);
 	while (*str)
 	{
-		ft_send_bit(pid, *str);
+		ft_send_bit(serv_pid, *str);
 		str++;
+		byte_send++;
 	}
+	ft_send_bit(serv_pid, '\0');
+	byte_send++;
 	return (0);
 }
