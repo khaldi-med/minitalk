@@ -65,7 +65,6 @@ int	main(int ac, char **av)
 		byte_send++;
 	}
 	ft_send_bit(serv_pid, '\0');
-	byte_send++;
 	printf("%d char has been send\n", byte_send);
 	return (0);
 }
