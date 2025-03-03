@@ -1,4 +1,5 @@
 #include <signal.h>
+#include <stdio.h>
 #include <unistd.h>
 
 int		byte_send;
@@ -35,10 +36,11 @@ void	ft_send_bit(int serv_pid, char c)
 	i = 0;
 	while (i < 8)
 	{
-		if ((c >> i) & 1)
+		if (c & 1)
 			kill(serv_pid, SIGUSR1);
 		else
 			kill(serv_pid, SIGUSR2);
+		c >>= i;
 		usleep(100);
 		i++;
 	}
@@ -64,6 +66,6 @@ int	main(int ac, char **av)
 	}
 	ft_send_bit(serv_pid, '\0');
 	byte_send++;
-	write(1, "[byte_send] has been send!", 25);
+	printf("%d char has been send\n", byte_send);
 	return (0);
 }

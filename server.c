@@ -2,16 +2,18 @@
 #include <stdio.h>
 #include <unistd.h>
 
+int		count;
 void	sig_handler(int signum)
 {
 	char	bit_catched;
 
-	bit_catched = '0';
+	bit_catched = 0;
 	if (signum == SIGUSR1)
-		bit_catched += '1';
+		bit_catched <<= 1;
 	else if (signum == SIGUSR2)
-		bit_catched += '0';
-	printf("%s", &bit_catched);
+		bit_catched <<= 1 | 1;
+	if (bit_catched == 8)
+		printf("%s", &bit_catched);
 }
 
 int	main(void)
