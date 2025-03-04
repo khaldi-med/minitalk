@@ -31,18 +31,15 @@ int	ft_atoi(const char *str)
 
 void	ft_send_bit(int serv_pid, char c)
 {
-	int	i;
-
-	i = 0;
-	while (i < 8)
+	int i = 7;     // Start from MSB
+	while (i >= 0) // Loop from 7 down to 0
 	{
-		if (c & 1)
-			kill(serv_pid, SIGUSR1);
+		if (c & (1 << i))
+			kill(serv_pid, SIGUSR2); // Send SIGUSR2 for 1
 		else
-			kill(serv_pid, SIGUSR2);
-		c >>= i;
+			kill(serv_pid, SIGUSR1); // Send SIGUSR1 for 0
 		usleep(100);
-		i++;
+		i--;
 	}
 }
 
