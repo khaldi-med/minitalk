@@ -1,81 +1,70 @@
-#include "./printf/ft_printf.h"
-#include "minitalk.h"
+#include "printf/ft_printf.h"
 #include <signal.h>
-#include <stdlib.h>
+#include <stdio.h>
 #include <unistd.h>
 
-void	send_char(int pid, unsigned char c)
-{
-	int	bit;
-	int	i;
-
-	i = 0;
-	while (i < 8)
-	{
-		bit = (c >> i) & 1;
-		if (bit == 0)
-			kill(pid, SIGUSR1);
-		else
-			kill(pid, SIGUSR2);
-		usleep(100);
-		i++;
-	}
-}
-
-void	send_message(int pid, char *message)
-{
-	int	i;
-
-	i = 0;
-	while (message[i])
-	{
-		send_char(pid, message[i]);
-		i++;
-	}
-	send_char(pid, '\0');
-	ft_printf("Message sent successfully!\n");
-}
+int		byte_send = 0; // Global variable to count bytes sent
 
 int	ft_atoi(const char *str)
 {
-	int	i;
-	int	sign;
-	int	result;
+	unsigned	n;
+	int			sing;
+	char		*s;
 
-	i = 0;
-	sign = 1;
-	result = 0;
-	while (str[i] == ' ' || (str[i] >= 9 && str[i] <= 13))
-		i++;
-	if (str[i] == '-' || str[i] == '+')
+	n = 0;
+	sing = 1;
+	s = (char *)str;
+	while ((*s >= 9 && *s <= 13) || *s == ' ')
+		s++;
+	if (*s == '+' || *s == '-')
 	{
-		if (str[i] == '-')
-			sign = -1;
-		i++;
+		if (*s == '-')
+			sing *= -1;
+		s++;
 	}
-	while (str[i] >= '0' && str[i] <= '9')
+	while (*s >= '0' && *s <= '9')
 	{
-		result = result * 10 + (str[i] - '0');
-		i++;
+		n = (n * 10) + (*s - '0');
+		s++;
 	}
-	return (result * sign);
+	return (sing * n);
 }
 
-int	main(int argc, char **argv)
+void	ft_send_bit(int serv_pid, char c)
 {
-	int	server_pid;
+	int i = 7; // Start from the most significant bit (MSB)
+	while (i >= 0)
+	{
+		if (c & (1 << i))            // Check if the current bit is 1
+			kill(serv_pid, SIGUSR2); // Send SIGUSR2 for 1
+		else
+			kill(serv_pid, SIGUSR1); // Send SIGUSR1 for 0
+		usleep(100);
+		// Small delay to ensure the server processes the signal
+		i--;
+	}
+}
 
-	if (argc != 3)
+int	main(int ac, char **av)
+{
+	int		serv_pid;
+	char	*str;
+
+	if (ac != 3) // Check if the correct number of arguments is provided
 	{
-		ft_printf("Usage: %s <server PID> <message>\n", argv[0]);
-		return (0);
+		write(1, "Usage: ./client <server_pid> <message>\n", 38);
+		return (1);
 	}
-	server_pid = ft_atoi(argv[1]);
-	if (server_pid <= 0)
+	serv_pid = ft_atoi(av[1]); // Convert the server PID from string to integer
+	str = av[2];               // Get the message to send
+	while (*str)               // Send each character of the message
 	{
-		ft_printf("Error: Invalid PID\n");
-		return (0);
+		ft_send_bit(serv_pid, *str);
+		str++;
+		byte_send++;
 	}
-	send_message(server_pid, argv[2]);
+	ft_send_bit(serv_pid, '\0');
+	// Send null terminator to indicate end of message
+	printf("%d bytes sent.\n", byte_send); // Print the number of bytes sent
 	return (0);
 }

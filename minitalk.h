@@ -6,18 +6,9 @@
 # include <stdlib.h>
 # include <unistd.h>
 
-/*
- * Client function prototypes
- */
-void	send_message(int pid, char *message);
-void	send_char(int pid, unsigned char c);
+int		ft_atoi(const char *str);
+void	ft_send_bit(int serv_pid, char c);
 void	signal_handler_client(int signal);
-
-/*
- * Server function prototypes
- */
-void	signal_handler_server(int signal);
-void	decode_message(int signal);
-void	receive_char(int signal);
+void	sig_handler(int signum);
 
 #endif
