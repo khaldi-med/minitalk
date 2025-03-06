@@ -1,44 +1,60 @@
+#include "./printf/ft_printf.h"
+#include "minitalk.h"
 #include <signal.h>
-#include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
 
-int		count;
-void	sig_handler(int signum)
-{
-	static char	bit_catched = 0;
-	static int	bit_count = 0;
+static unsigned char	g_char = 0;
 
-	bit_catched <<= 1;
+void	signal_handler_server(int signum)
+{
+	static int	i = 0;
+
 	if (signum == SIGUSR2)
-		bit_catched |= 1;
-	bit_count++;
-	if (bit_count == 8)
+		g_char |= (1 << i);
+	i++;
+	if (i == 8)
 	{
-		if (bit_catched == '\0')
-		{
-			printf("\nThe message has %d characters\n", count);
-			count = 0;
-		}
-		else
-		{
-			write(1, &bit_catched, 1);
-			count++;
-		}
-		bit_catched = 0;
-		bit_count = 0;
+		ft_printf("%c", g_char);
+		g_char = 0;
+		i = 0;
 	}
+}
+
+void	decode_message(int signal)
+{
+	signal_handler_server(signal);
+}
+
+void	receive_char(int signal)
+{
+	signal_handler_server(signal);
 }
 
 int	main(void)
 {
-	struct sigaction	sig;
+	struct sigaction	sa;
+	int					server_pid;
 
-	printf("the pid poc is %d\n: ", getpid());
-	sig.sa_handler = sig_handler;
-	sigemptyset(&sig.sa_mask);
-	sig.sa_flags = 0;
-	sigaction(SIGUSR1, &sig, NULL);
-	sigaction(SIGUSR2, &sig, NULL);
+	server_pid = getpid();
+	ft_printf("Server PID: %d\n", server_pid);
+	sa.sa_handler = signal_handler_server;
+	sa.sa_flags = 0;
+	sigemptyset(&sa.sa_mask);
+	
+	// Register both SIGUSR1 and SIGUSR2 handlers
+	if (sigaction(SIGUSR1, &sa, NULL) == -1)
+	{
+		ft_printf("Error setting up SIGUSR1 handler\n");
+		exit(1);
+	}
+	if (sigaction(SIGUSR2, &sa, NULL) == -1)
+	{
+		ft_printf("Error setting up SIGUSR2 handler\n");
+		exit(1);
+	}
+	
+	ft_printf("Server is ready to receive messages...\n");
 	while (1)
 		pause();
 	return (0);

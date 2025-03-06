@@ -1,67 +1,81 @@
+#include "./printf/ft_printf.h"
+#include "minitalk.h"
 #include <signal.h>
-#include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
 
-int		byte_send;
+void	send_char(int pid, unsigned char c)
+{
+	int	bit;
+	int	i;
+
+	i = 0;
+	while (i < 8)
+	{
+		bit = (c >> i) & 1;
+		if (bit == 0)
+			kill(pid, SIGUSR1);
+		else
+			kill(pid, SIGUSR2);
+		usleep(100);
+		i++;
+	}
+}
+
+void	send_message(int pid, char *message)
+{
+	int	i;
+
+	i = 0;
+	while (message[i])
+	{
+		send_char(pid, message[i]);
+		i++;
+	}
+	send_char(pid, '\0');
+	ft_printf("Message sent successfully!\n");
+}
 
 int	ft_atoi(const char *str)
 {
-	unsigned	n;
-	int			sing;
-	char		*s;
+	int	i;
+	int	sign;
+	int	result;
 
-	s = (char *)str;
-	n = 0;
-	sing = 1;
-	while ((*s >= 9 && *s <= 13) || *s == ' ')
-		s++;
-	if (*s == '+' || *s == '-')
+	i = 0;
+	sign = 1;
+	result = 0;
+	while (str[i] == ' ' || (str[i] >= 9 && str[i] <= 13))
+		i++;
+	if (str[i] == '-' || str[i] == '+')
 	{
-		if (*s == '-')
-			sing *= -1;
-		s++;
+		if (str[i] == '-')
+			sign = -1;
+		i++;
 	}
-	while (*s >= '0' && *s <= '9')
+	while (str[i] >= '0' && str[i] <= '9')
 	{
-		n = (n * 10) + (*s - '0');
-		s++;
+		result = result * 10 + (str[i] - '0');
+		i++;
 	}
-	return (sing * n);
+	return (result * sign);
 }
 
-void	ft_send_bit(int serv_pid, char c)
+int	main(int argc, char **argv)
 {
-	int i = 7;     // Start from MSB
-	while (i >= 0) // Loop from 7 down to 0
-	{
-		if (c & (1 << i))
-			kill(serv_pid, SIGUSR2); // Send SIGUSR2 for 1
-		else
-			kill(serv_pid, SIGUSR1); // Send SIGUSR1 for 0
-		usleep(100);
-		i--;
-	}
-}
+	int	server_pid;
 
-int	main(int ac, char **av)
-{
-	int		serv_pid;
-	char	*str;
-
-	if (ac != 3)
+	if (argc != 3)
 	{
-		write(1, "The argemments not valide!", 25);
-		return (1);
+		ft_printf("Usage: %s <server PID> <message>\n", argv[0]);
+		return (0);
 	}
-	str = av[2];
-	serv_pid = ft_atoi(av[1]);
-	while (*str)
+	server_pid = ft_atoi(argv[1]);
+	if (server_pid <= 0)
 	{
-		ft_send_bit(serv_pid, *str);
-		str++;
-		byte_send++;
+		ft_printf("Error: Invalid PID\n");
+		return (0);
 	}
-	ft_send_bit(serv_pid, '\0');
-	printf("%d char has been send\n", byte_send);
+	send_message(server_pid, argv[2]);
 	return (0);
 }
