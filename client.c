@@ -39,7 +39,7 @@ void	ft_send_bit(int serv_pid, char c)
 			kill(serv_pid, SIGUSR2); // Send SIGUSR2 for 1
 		else
 			kill(serv_pid, SIGUSR1); // Send SIGUSR1 for 0
-		usleep(100);
+		usleep(400);
 		// Small delay to ensure the server processes the signal
 		i--;
 	}
