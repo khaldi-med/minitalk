@@ -3,8 +3,7 @@
 #include <stdio.h>
 #include <unistd.h>
 
-int		byte_send = 0; // Global variable to count bytes sent
-
+int		byte_send = 0;
 int	ft_atoi(const char *str)
 {
 	unsigned	n;
@@ -32,15 +31,16 @@ int	ft_atoi(const char *str)
 
 void	ft_send_bit(int serv_pid, char c)
 {
-	int i = 7; // Start from the most significant bit (MSB)
+	int	i;
+
+	i = 7;
 	while (i >= 0)
 	{
-		if (c & (1 << i))            // Check if the current bit is 1
-			kill(serv_pid, SIGUSR2); // Send SIGUSR2 for 1
+		if (c & (1 << i))
+			kill(serv_pid, SIGUSR2);
 		else
-			kill(serv_pid, SIGUSR1); // Send SIGUSR1 for 0
+			kill(serv_pid, SIGUSR1);
 		usleep(400);
-		// Small delay to ensure the server processes the signal
 		i--;
 	}
 }
@@ -50,21 +50,20 @@ int	main(int ac, char **av)
 	int		serv_pid;
 	char	*str;
 
-	if (ac != 3) // Check if the correct number of arguments is provided
+	if (ac != 3)
 	{
-		write(1, "Usage: ./client <server_pid> <message>\n", 38);
+		write(1, "The argemment not valide\n", 25);
 		return (1);
 	}
-	serv_pid = ft_atoi(av[1]); // Convert the server PID from string to integer
-	str = av[2];               // Get the message to send
-	while (*str)               // Send each character of the message
+	serv_pid = ft_atoi(av[1]);
+	str = av[2];
+	while (*str)
 	{
 		ft_send_bit(serv_pid, *str);
 		str++;
 		byte_send++;
 	}
 	ft_send_bit(serv_pid, '\0');
-	// Send null terminator to indicate end of message
-	printf("%d bytes sent.\n", byte_send); // Print the number of bytes sent
+	printf("%d char sent.\n", byte_send);
 	return (0);
 }

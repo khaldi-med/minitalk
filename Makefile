@@ -1,57 +1,36 @@
-# Makefile for minitalk project
-
-# Compiler and flags
-CC = gcc
+NAME = client server
+BONUS = client_bonus server_bonus
+CC = cc
 CFLAGS = -Wall -Wextra -Werror
+PRINTF_DIR = printf
+PRINTF = $(PRINTF_DIR)/libftprintf.a
 
-# Directories
-PRINTF_DIR = ./printf
-PRINTF_LIB = $(PRINTF_DIR)/libftprintf.a
+all: $(NAME)
 
-# Source files
-SERVER_SRC = server.c
-CLIENT_SRC = client.c
+bonus: $(BONUS)
 
-# Object files
-SERVER_OBJ = $(SERVER_SRC:.c=.o)
-CLIENT_OBJ = $(CLIENT_SRC:.c=.o)
-
-# Executable names
-SERVER = server
-CLIENT = client
-
-# Default target
-all: $(PRINTF_LIB) $(SERVER) $(CLIENT)
-
-# Compile printf library
-$(PRINTF_LIB):
+$(PRINTF):
 	@make -C $(PRINTF_DIR)
 
-# Compile server
-$(SERVER): $(SERVER_OBJ)
-	$(CC) $(CFLAGS) -o $@ $< $(PRINTF_LIB)
+client: client.c $(PRINTF)
+	$(CC) $(CFLAGS) $< $(PRINTF) -o $@
 
-# Compile client
-$(CLIENT): $(CLIENT_OBJ)
-	$(CC) $(CFLAGS) -o $@ $< $(PRINTF_LIB)
+server: server.c $(PRINTF)
+	$(CC) $(CFLAGS) $< $(PRINTF) -o $@
 
-# Compile .c files to .o files
-%.o: %.c minitalk.h
-	$(CC) $(CFLAGS) -c $< -o $@
+client_bonus: client_bonus.c $(PRINTF)
+	$(CC) $(CFLAGS) $< $(PRINTF) -o $@
 
-# Clean object files
+server_bonus: server_bonus.c $(PRINTF)
+	$(CC) $(CFLAGS) $< $(PRINTF) -o $@
+
 clean:
 	@make -C $(PRINTF_DIR) clean
-	rm -f $(SERVER_OBJ) $(CLIENT_OBJ)
+	@rm -f client server client_bonus server_bonus *.o
 
-# Clean object files and executables
 fclean: clean
 	@make -C $(PRINTF_DIR) fclean
-	rm -f $(SERVER) $(CLIENT)
 
-# Clean and recompile
 re: fclean all
 
-# Ensure these targets are not matched with files
-.PHONY: all clean fclean re
-
+.PHONY: all bonus clean fclean re

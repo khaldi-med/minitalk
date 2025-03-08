@@ -16,7 +16,7 @@ void	sig_handler(int signum)
 	{
 		if (bit_catched == '\0')
 		{
-			ft_printf("\nTotal characters received: %d\n", count);
+			ft_printf("\n%d char has been catched!\n", count);
 			count = 0;
 		}
 		else
