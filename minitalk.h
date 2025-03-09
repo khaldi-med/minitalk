@@ -6,9 +6,7 @@
 # include <stdlib.h>
 # include <unistd.h>
 
-int		ft_atoi(const char *str);
-void	ft_send_bit(int serv_pid, char c);
-void	signal_handler_client(int signal);
-void	sig_handler(int signum);
+int	ft_atoi(const char *str);
+int	ft_isdigit(int c);
 
 #endif
