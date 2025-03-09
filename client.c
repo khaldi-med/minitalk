@@ -17,10 +17,12 @@ void	ft_send_bit(int serv_pid, char c)
 	while (i >= 0)
 	{
 		if (c & (1 << i))
+		{
 			if ((kill(serv_pid, SIGUSR2)) == -1)
 				ft_error();
-			else if ((kill(serv_pid, SIGUSR1)) == -1)
-				ft_error();
+		}
+		else if ((kill(serv_pid, SIGUSR1)) == -1)
+			ft_error();
 		usleep(400);
 		i--;
 	}

@@ -2,6 +2,7 @@ CC = cc
 CFLAGS = -Wall -Wextra -Werror
 SSRC = server.c
 CSRC = client.c
+UTILS = minitalk_utilis.c
 
 SERVER = server
 CLIENT = client
@@ -16,8 +17,8 @@ all: $(NAME)
 
 $(NAME): $(SSRC) $(CSRC)
 	@	make -C printf/
-	@	$(CC) $(CFLAGS) $(SSRC) $(PRINTF) -o $(SERVER)
-	@	$(CC) $(CFLAGS) $(CSRC) $(PRINTF) -o $(CLIENT)
+	@	$(CC) $(CFLAGS) $(SSRC) $(UTILS) $(PRINTF) -o $(SERVER)
+	@	$(CC) $(CFLAGS) $(CSRC) $(UTILS) $(PRINTF) -o $(CLIENT)
 	@	echo "\033[32m make: OK \033[0m"
 
 clean:

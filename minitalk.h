@@ -6,7 +6,6 @@
 # include <stdlib.h>
 # include <unistd.h>
 
-int	ft_atoi(const char *str);
 int	ft_isdigit(int c);
-
+int	ft_atoi(const char *str);
 #endif
