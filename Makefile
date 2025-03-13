@@ -1,33 +1,47 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: mohkhald <mohkhald@student.1337.ma>        +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2025/03/09 03:01:51 by mohkhald          #+#    #+#              #
+#    Updated: 2025/03/09 21:56:01 by mohkhald         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
 CC = cc
+
 CFLAGS = -Wall -Wextra -Werror
-SSRC = server.c
-CSRC = client.c
-UTILS = minitalk_utilis.c
+
+SRV_S = server.c
+
+CLNT_S = client.c
+
+UTILIS = minitalk_utilis.c
 
 SERVER = server
+
 CLIENT = client
 
-PRINTF = printf/libftprintf.a
+PRINTF = ft_printf/libftprintf.a
 
-NAME = $(SERVER) $(CLIENT)
+NAME = $(SERVER) $($CLIENT)
 
-RM = rm -f
+RM = rm -Rf
 
 all: $(NAME)
 
-$(NAME): $(SSRC) $(CSRC)
-	@	make -C printf/
-	@	$(CC) $(CFLAGS) $(SSRC) $(UTILS) $(PRINTF) -o $(SERVER)
-	@	$(CC) $(CFLAGS) $(CSRC) $(UTILS) $(PRINTF) -o $(CLIENT)
-	@	echo "\033[32m make: OK \033[0m"
+$(NAME): $(SRV_S) $(CLNT_S) 
+	@make -C ft_printf/
+	@$(CC) $(CFLAGS) $(SRV_S) $(UTILIS) $(PRINTF) -o $(SERVER)
+	@$(CC) $(CFLAGS) $(CLNT_S) $(UTILIS) $(PRINTF) -o $(CLIENT)
 
-clean:
-	@	make clean -C printf/ 
-	@	echo "\033[32m clean: OK \033[0m"
+clean: 
+	@make clean -C ft_printf/
 
 fclean: clean
-	@	$(RM) $(SERVER) $(CLIENT) $(PRINTF)
-	@	echo "\033[32m fclean: OK \033[0m"
+	@$(RM) $(SERVER) $(CLIENT) $(PRINTF)
 
 re: fclean all
 

@@ -1,30 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_put_pointer.c                                   :+:      :+:    :+:   */
+/*   ft_putstr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mohkhald <mohkhald@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/10 06:51:05 by mohkhald          #+#    #+#             */
-/*   Updated: 2024/12/25 22:36:57 by mohkhald         ###   ########.fr       */
+/*   Created: 2024/12/10 01:22:15 by mohkhald          #+#    #+#             */
+/*   Updated: 2024/12/26 00:19:00 by mohkhald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-int	ft_put_pointer(unsigned long n)
+int	ft_putstr(char *s)
 {
 	int	count;
 
-	count = ft_putstr("0x");
-	if (n == 0)
+	count = 0;
+	if (!s)
+		s = "(null)";
+	while (s[count])
 	{
-		ft_putchar('0');
+		ft_putchar(s[count]);
 		count++;
-	}
-	else
-	{
-		count += ft_putnbr_base(n, 16, "0123456789abcdef");
 	}
 	return (count);
 }

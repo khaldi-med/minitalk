@@ -1,26 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_printf.h                                        :+:      :+:    :+:   */
+/*   ft_putnbr_base.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mohkhald <mohkhald@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/10 01:13:45 by mohkhald          #+#    #+#             */
-/*   Updated: 2024/12/25 22:37:24 by mohkhald         ###   ########.fr       */
+/*   Created: 2024/12/10 05:22:13 by mohkhald          #+#    #+#             */
+/*   Updated: 2024/12/26 00:15:07 by mohkhald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_PRINTF_H
-# define FT_PRINTF_H
+#include "ft_printf.h"
 
-# include <stdarg.h>
-# include <unistd.h>
+int	ft_putnbr_base(unsigned long n, int base, char *format)
+{
+	int		count;
+	int		i;
+	char	buffer[19];
 
-int	ft_putnbr(int n);
-int	ft_putchar(char c);
-int	ft_printf(const char *format, ...);
-int	ft_putnbr_base(unsigned long n, int base, char *format);
-int	ft_put_pointer(unsigned long n);
-int	ft_putstr(char *s);
-
-#endif
+	count = 0;
+	i = 0;
+	if (n == 0)
+		return (ft_putchar('0'));
+	while (n)
+	{
+		buffer[i++] = format[n % base];
+		n /= base;
+	}
+	while (i--)
+	{
+		ft_putchar(buffer[i]);
+		count++;
+	}
+	return (count);
+}

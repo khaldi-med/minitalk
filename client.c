@@ -1,11 +1,20 @@
-#include "minitalk.h"
-#include "printf/ft_printf.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   client.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mohkhald <mohkhald@student.1337.ma>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/09 03:12:46 by mohkhald          #+#    #+#             */
+/*   Updated: 2025/03/10 02:49:08 by mohkhald         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-int		byte_send = 0;
+#include "minitalk.h"
 
 void	ft_error(void)
 {
-	write(2, "There is an ERORR!\n", 18);
+	write(2, "There is an ERROR!\n", 19);
 	exit(1);
 }
 
@@ -28,35 +37,40 @@ void	ft_send_bit(int serv_pid, char c)
 	}
 }
 
-int	main(int ac, char **av)
+int	ft_check_pid(char *str)
 {
-	int		serv_pid;
-	char	*str;
-	int		i;
+	int	serv_pid;
 
-	i = 0;
-	if (ac != 3 || av[1][0] == 0 || av[2][0] == 0)
-	{
-		write(1, "The argemment not valide\n", 25);
-		return (1);
-	}
-	while (av[1][i])
-	{
-		if (!ft_isdigit(av[1][i]))
-			ft_error();
-		i++;
-	}
-	serv_pid = ft_atoi(av[1]);
-	if (serv_pid <= 0)
-		ft_error();
-	str = av[2];
+	serv_pid = ft_atoi(str);
 	while (*str)
 	{
-		ft_send_bit(serv_pid, *str);
+		if (!ft_isdigit(*str))
+			ft_error();
 		str++;
-		byte_send++;
 	}
-	ft_send_bit(serv_pid, '\0');
-	ft_printf("%d char sent.\n", byte_send);
+	if (serv_pid <= 0)
+		ft_error();
+	return (serv_pid);
+}
+
+int	main(int ac, char **av)
+{
+	int		byte_sent;
+	int		pid;
+	char	*str;
+
+	if (ac != 3 || av[1][0] == 0 || av[2][0] == 0)
+		ft_error();
+	pid = ft_check_pid(av[1]);
+	str = av[2];
+	byte_sent = 0;
+	while (*str)
+	{
+		ft_send_bit(pid, *str);
+		str++;
+		byte_sent++;
+	}
+	ft_send_bit(pid, '\0');
+	ft_printf("%d char sent.\n", byte_sent);
 	return (0);
 }

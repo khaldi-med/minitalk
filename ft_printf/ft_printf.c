@@ -6,7 +6,7 @@
 /*   By: mohkhald <mohkhald@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 01:07:30 by mohkhald          #+#    #+#             */
-/*   Updated: 2024/12/25 23:18:18 by mohkhald         ###   ########.fr       */
+/*   Updated: 2025/01/12 00:28:15 by mohkhald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,9 @@ static int	ft_handle_format(char format, va_list args)
 		count += (ft_putnbr_base(va_arg(args, unsigned int), 16,
 					"0123456789ABCDEF"));
 	else if (format == '%')
-		count += ft_putchar('%');
+		count += (ft_putchar('%'));
 	else
-		count += (ft_putchar(format));
+		count += ft_putchar(format);
 	return (count);
 }
 
@@ -44,18 +44,25 @@ int	ft_printf(const char *format, ...)
 {
 	va_list	args;
 	int		count;
+	int		i;
 
+	i = 0;
 	count = 0;
 	if (!format)
-		return (-1);
+		return (0);
 	va_start(args, format);
-	while (*format)
+	while (format[i])
 	{
-		if (*format == '%')
-			count += ft_handle_format(*(++format), args);
+		if (format[i] == '%' && format[i + 1])
+		{
+			i++;
+			count += ft_handle_format(format[i], args);
+		}
+		else if (format[i] == '%')
+			return (count);
 		else
-			count += ft_putchar(*format);
-		format++;
+			count += ft_putchar(format[i]);
+		i++;
 	}
 	va_end(args);
 	return (count);

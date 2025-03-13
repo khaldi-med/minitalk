@@ -6,7 +6,7 @@
 /*   By: mohkhald <mohkhald@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 22:36:43 by mohkhald          #+#    #+#             */
-/*   Updated: 2024/12/26 01:46:55 by mohkhald         ###   ########.fr       */
+/*   Updated: 2024/12/28 15:54:45 by mohkhald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,12 @@ int	ft_putnbr(int n)
 	count = 0;
 	if (n == -2147483648)
 		return (ft_putstr("-2147483648"));
-	
 	if (n < 0)
 	{
 		ft_putchar('-');
+		count++;
 		n *= -1;
 	}
-	if (n > 9)
-		ft_putnbr(n / 10);
-	count += ft_putchar(n % 10 + '0');
+	count += ft_putnbr_base(n, 10, "0123456789");
 	return (count);
 }

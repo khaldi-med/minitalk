@@ -1,18 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putchar.c                                       :+:      :+:    :+:   */
+/*   ft_printf.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mohkhald <mohkhald@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/10 01:21:53 by mohkhald          #+#    #+#             */
-/*   Updated: 2024/12/25 22:36:22 by mohkhald         ###   ########.fr       */
+/*   Created: 2024/12/10 01:13:45 by mohkhald          #+#    #+#             */
+/*   Updated: 2024/12/26 00:17:35 by mohkhald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#ifndef FT_PRINTF_H
+# define FT_PRINTF_H
 
-int	ft_putchar(char c)
-{
-	return (write(1, &c, 1));
-}
+# include <stdarg.h>
+# include <unistd.h>
+
+int	ft_putnbr(int n);
+int	ft_putchar(char c);
+int	ft_printf(const char *format, ...);
+int	ft_putnbr_base(unsigned long n, int base, char *format);
+int	ft_put_pointer(unsigned long n);
+int	ft_putstr(char *s);
+
+#endif

@@ -1,21 +1,26 @@
-#include "minitalk.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minitalk_utilis.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mohkhald <mohkhald@student.1337.ma>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/09 03:45:39 by mohkhald          #+#    #+#             */
+/*   Updated: 2025/03/10 00:44:16 by mohkhald         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-int	ft_isdigit(int c)
-{
-	if (c >= '0' && c <= '9')
-		return (1);
-	return (0);
-}
+#include "minitalk.h"
 
 int	ft_atoi(const char *str)
 {
-	unsigned	n;
-	int			sing;
-	char		*s;
+	unsigned int	n;
+	int				sing;
+	char			*s;
 
+	s = (char *)str;
 	n = 0;
 	sing = 1;
-	s = (char *)str;
 	while ((*s >= 9 && *s <= 13) || *s == ' ')
 		s++;
 	if (*s == '+' || *s == '-')
@@ -30,4 +35,11 @@ int	ft_atoi(const char *str)
 		s++;
 	}
 	return (sing * n);
+}
+
+int	ft_isdigit(int c)
+{
+	if (c >= '0' && c <= '9')
+		return (1);
+	return (0);
 }

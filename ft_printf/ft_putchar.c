@@ -1,31 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putstr.c                                        :+:      :+:    :+:   */
+/*   ft_putchar.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mohkhald <mohkhald@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/10 01:22:15 by mohkhald          #+#    #+#             */
-/*   Updated: 2024/12/25 22:41:51 by mohkhald         ###   ########.fr       */
+/*   Created: 2024/12/10 01:21:53 by mohkhald          #+#    #+#             */
+/*   Updated: 2024/12/26 00:15:28 by mohkhald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-int	ft_putstr(char *s)
+int	ft_putchar(char c)
 {
-	int	count;
-	int	ret;
-
-	count = 0;
-	if (!s)
-		s = "(null)";
-	while (s[count])
-	{
-		ret = ft_putchar(s[count]);
-		if (ret == -1)
-			return (-1);
-		count++;
-	}
-	return (count);
+	return (write(1, &c, 1));
 }
