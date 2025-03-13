@@ -6,7 +6,7 @@
 /*   By: mohkhald <mohkhald@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 03:47:37 by mohkhald          #+#    #+#             */
-/*   Updated: 2025/03/11 21:27:32 by mohkhald         ###   ########.fr       */
+/*   Updated: 2025/03/13 01:33:24 by mohkhald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,21 @@
 
 int		char_count;
 
-void	ft_sighandler(int signum)
+void	ft_sighandler(int signum, siginfo_t *info, void *context)
 {
-	static char	c;
-	static int	bit_count;
+	static pid_t	cl_pid;
+	static char		c;
+	static int		bit_count;
 
+	(void)context;
+	if (cl_pid == 0)
+		cl_pid = info->si_pid;
+	if (info->si_pid != cl_pid)
+	{
+		cl_pid = 0;
+		c = 0;
+		cl_pid = info->si_pid;
+	}
 	c <<= 1;
 	if (signum == SIGUSR2)
 		c |= 1;
@@ -44,9 +54,9 @@ int	main(void)
 {
 	struct sigaction	sig;
 
-	sig.sa_handler = ft_sighandler;
+	sig.sa_sigaction = ft_sighandler;
 	sigemptyset(&sig.sa_mask);
-	sig.sa_flags = 0;
+	sig.sa_flags = SA_SIGINFO;
 	ft_printf("PID: %d\n", getpid());
 	sigaction(SIGUSR2, &sig, NULL);
 	sigaction(SIGUSR1, &sig, NULL);
