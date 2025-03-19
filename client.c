@@ -6,71 +6,57 @@
 /*   By: mohkhald <mohkhald@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 03:12:46 by mohkhald          #+#    #+#             */
-/*   Updated: 2025/03/13 01:33:27 by mohkhald         ###   ########.fr       */
+/*   Updated: 2025/03/15 01:27:43 by mohkhald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 
-void	ft_error(void)
+void	ft_success(int sigalnum)
 {
-	write(2, "There is an ERROR!\n", 19);
-	exit(1);
+	(void)sigalnum;
+	ft_printf("\033[32;1m✅✅DUDE MESSAGE PROCCESS SUCCESS...✅✅\n");
 }
 
-void	ft_send_bit(int serv_pid, char c)
+void	ft_message(int pid, unsigned char s)
 {
 	int	i;
+	int	n;
+	int	c;
 
-	i = 7;
-	while (i >= 0)
+	i = 0;
+	n = 128;
+	while (i < 8)
 	{
-		if (c & (1 << i))
+		c = s / n;
+		if (c == 0)
+			kill(pid, SIGUSR2);
+		else
 		{
-			if ((kill(serv_pid, SIGUSR2)) == -1)
-				ft_error();
+			kill(pid, SIGUSR1);
+			s = s % n;
 		}
-		else if ((kill(serv_pid, SIGUSR1)) == -1)
-			ft_error();
-		usleep(400);
-		i--;
+		usleep(100);
+		n /= 2;
+		i++;
 	}
-}
-
-int	ft_check_pid(char *str)
-{
-	int	serv_pid;
-
-	serv_pid = ft_atoi(str);
-	while (*str)
-	{
-		if (!ft_isdigit(*str))
-			ft_error();
-		str++;
-	}
-	if (serv_pid <= 0)
-		ft_error();
-	return (serv_pid);
 }
 
 int	main(int ac, char **av)
 {
-	int		byte_sent;
-	int		pid;
-	char	*str;
+	int	j;
+	int	pid;
 
-	if (ac != 3 || av[1][0] == 0 || av[2][0] == 0)
-		ft_error();
-	pid = ft_check_pid(av[1]);
-	str = av[2];
-	byte_sent = 0;
-	while (*str)
+	if (ac != 3)
+		return (1);
+	pid = ft_atoi(av[1]);
+	signal(SIGUSR1, ft_success);
+	j = 0;
+	while (av[2][j])
 	{
-		ft_send_bit(pid, *str);
-		str++;
-		byte_sent++;
+		ft_message(pid, av[2][j]);
+		j++;
 	}
-	ft_send_bit(pid, '\0');
-	ft_printf("%d char sent.\n", byte_sent);
-	return (0);
+	if (av[2][j] == '\0')
+		ft_message(pid, av[2][j]);
 }
