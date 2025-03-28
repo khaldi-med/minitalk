@@ -6,7 +6,7 @@
 #    By: mohkhald <mohkhald@student.1337.ma>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/09 03:01:51 by mohkhald          #+#    #+#              #
-#    Updated: 2025/03/09 21:56:01 by mohkhald         ###   ########.fr        #
+#    Updated: 2025/03/28 22:29:09 by mohkhald         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,7 @@ CLIENT = client
 
 PRINTF = ft_printf/libftprintf.a
 
-NAME = $(SERVER) $($CLIENT)
+NAME = $(SERVER) $(CLIENT)
 
 RM = rm -Rf
 
