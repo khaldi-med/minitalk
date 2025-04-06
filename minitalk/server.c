@@ -6,28 +6,25 @@
 /*   By: mohkhald <mohkhald@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 03:47:37 by mohkhald          #+#    #+#             */
-/*   Updated: 2025/03/28 22:30:59 by mohkhald         ###   ########.fr       */
+/*   Updated: 2025/03/27 22:23:32 by mohkhald         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 
-int		char_count;
-
 void	ft_sighandler(int signum, siginfo_t *info, void *context)
 {
-	static int	cl_pid;
+	static int	c_pid;
 	static char	c;
 	static int	bit_count;
 
 	(void)context;
-	if (cl_pid == 0)
-		cl_pid = info->si_pid;
-	if (info->si_pid != cl_pid)
+	c_pid = info->si_pid;
+	if (info->si_pid != c_pid)
 	{
-		cl_pid = 0;
 		c = 0;
-		cl_pid = info->si_pid;
+		bit_count = 0;
+		c_pid = info->si_pid;
 	}
 	c <<= 1;
 	if (signum == SIGUSR2)
@@ -35,16 +32,7 @@ void	ft_sighandler(int signum, siginfo_t *info, void *context)
 	bit_count++;
 	if (bit_count == 8)
 	{
-		if (c == '\0')
-		{
-			ft_printf("\n%d char has been catched!\n", char_count);
-			char_count = 0;
-		}
-		else
-		{
-			write(1, &c, 1);
-			char_count++;
-		}
+		write(1, &c, 1);
 		c = 0;
 		bit_count = 0;
 	}
